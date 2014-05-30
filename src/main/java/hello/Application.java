@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -49,7 +50,7 @@ public class Application {
 	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
 	public static void main(String[] args) throws Exception {
-		ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
+		ApplicationContext ctx = SpringApplication.run(Application.class, args);
 		System.in.read();
 		Runtime.getRuntime().exit(SpringApplication.exit(ctx));
 	}
@@ -58,7 +59,8 @@ public class Application {
 	private Environment env;
 
 	@Bean
-	@InboundChannelAdapter(value = "feedChannel", poller = @Poller(maxMessagesPerPoll = "100", fixedRate = "10000"))
+	@InboundChannelAdapter(value = "feedChannel",
+			poller = @Poller(maxMessagesPerPoll = "100", fixedRate = "10000"))
 	public MessageSource<SyndEntry> feedAdapter() throws MalformedURLException {
 		return new FeedEntryMessageSource(new URL(env.getProperty("url")), "feedAdapter");
 	}

@@ -12,7 +12,7 @@ Spring Boot と Spring Integration を使用して XML を使用せずに Java C
 
 ## pom.xml
 
-```xml|pom.xml
+```xml:pom.xml
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -41,35 +41,7 @@ Spring Boot と Spring Integration を使用して XML を使用せずに Java C
 
 ## Application.java
 
-```java|Application.java
-package hello;
-
-import com.sun.syndication.feed.synd.SyndEntry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.integration.annotation.InboundChannelAdapter;
-import org.springframework.integration.annotation.MessageEndpoint;
-import org.springframework.integration.annotation.Poller;
-import org.springframework.integration.annotation.ServiceActivator;
-import org.springframework.integration.channel.QueueChannel;
-import org.springframework.integration.core.MessageSource;
-import org.springframework.integration.feed.inbound.FeedEntryMessageSource;
-import org.springframework.integration.scheduling.PollerMetadata;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.scheduling.support.PeriodicTrigger;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
+```java:Application.java
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
@@ -77,7 +49,7 @@ public class Application {
 	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
 	public static void main(String[] args) throws Exception {
-		ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
+		ApplicationContext ctx = SpringApplication.run(Application.class, args);
 		System.in.read();
 		Runtime.getRuntime().exit(SpringApplication.exit(ctx));
 	}
@@ -86,7 +58,8 @@ public class Application {
 	private Environment env;
 
 	@Bean
-	@InboundChannelAdapter(value = "feedChannel", poller = @Poller(maxMessagesPerPoll = "100", fixedRate = "10000"))
+	@InboundChannelAdapter(value = "feedChannel",
+			poller = @Poller(maxMessagesPerPoll = "100", fixedRate = "10000"))
 	public MessageSource<SyndEntry> feedAdapter() throws MalformedURLException {
 		return new FeedEntryMessageSource(new URL(env.getProperty("url")), "feedAdapter");
 	}
@@ -129,4 +102,12 @@ public class Application {
 ```実行例
 mvn package
 java -jar java -jar target/spring-boot-integration-rss-sample-1.0.jar --url=http://search.goo.ne.jp/rss/newkw.rdf
+```
+
+## Complete Source Code
+
+see https://github.com/sunny4381/spring-boot-integration-rss-sample, and execute
+
+```
+git clone https://github.com/sunny4381/spring-boot-integration-rss-sample.git
 ```
