@@ -101,7 +101,7 @@ public class Application {
 
 ```実行例
 mvn package
-java -jar java -jar target/spring-boot-integration-rss-sample-1.0.jar --url=http://search.goo.ne.jp/rss/newkw.rdf
+java -jar target/spring-boot-integration-rss-sample-1.0.jar --url=http://search.goo.ne.jp/rss/newkw.rdf
 ```
 
 ## Complete Source Code
